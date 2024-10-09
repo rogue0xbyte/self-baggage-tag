@@ -1,0 +1,168 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Kiosk Check-in</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <link rel="stylesheet" href="/static/styles.css">
+</head>
+<body>
+
+    <div class="container">
+        <h1>Kiosk Check-in</h1>
+
+        <!-- Step 1: Scan Barcode/Enter PNR and Flight Number -->
+        <div id="step1" class="step active-step">
+            <div class="form-group">
+                <label for="barcodeInput" class="form-label">Scan Barcode or Enter Details</label>
+                <button type="button" class="btn btn-secondary" id="scanBarcode">Scan Barcode</button>
+            </div>
+            <div class="form-group">
+                <label for="pnrInput" class="form-label">PNR Number</label>
+                <input type="text" class="form-control" id="pnrInput" placeholder="Enter PNR Number" required>
+            </div>
+            <div class="form-group">
+                <label for="flightNumberInput" class="form-label">Flight Number</label>
+                <input type="text" class="form-control" id="flightNumberInput" placeholder="Enter Flight Number" required>
+            </div>
+            <button type="button" class="btn btn-primary" id="nextButton">Next</button>
+        </div>
+
+        <!-- Step 2: Select Quantity of Baggage -->
+        <div id="step2" class="step">
+            <div class="form-group">
+                <img src="https://img.freepik.com/premium-vector/isolated-stack-colorful-luggage-cute-cartoon-illustration-graphic-design-element-traveling_1036966-122.jpg" alt="Luggage" class="luggage-img">
+            </div>
+            <div class="form-group">
+                <label for="baggageCount" class="form-label">Number of Bags</label>
+                <div class="quantity-control">
+                    <button id="decrease" class="btn btn-secondary"><i class="fas fa-arrow-down"></i></button>
+                    <span id="quantity" class="quantity-number">1</span>
+                    <button id="increase" class="btn btn-secondary"><i class="fas fa-arrow-up"></i></button>
+                </div>
+            </div>
+            <form method="POST" id="checkinForm">
+                <input type="hidden" name="boarding_pass" id="boardingPassHidden">
+                <input type="hidden" name="baggage_count" id="baggageCountHidden">
+                <button type="submit" class="btn btn-success" id="submitButton">Check-in</button>
+            </form>
+        </div>
+
+        <!-- QR Code Reader -->
+        <div id="step1-reader" class="step">
+            <div id="reader"></div>
+            <button type="button" class="btn btn-secondary" id="stopScan">Stop Scanning</button>
+        </div>
+
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/js/all.min.js"></script>
+    <script src="https://unpkg.com/html5-qrcode" type="text/javascript"></script>
+
+    <script>
+        const step1 = document.getElementById('step1');
+        const step2 = document.getElementById('step2');
+        const nextButton = document.getElementById('nextButton');
+        const submitButton = document.getElementById('submitButton');
+        const pnrInput = document.getElementById('pnrInput');
+        const flightNumberInput = document.getElementById('flightNumberInput');
+        const boardingPassHidden = document.getElementById('boardingPassHidden');
+        const baggageCountHidden = document.getElementById('baggageCountHidden');
+        const scanBarcodeButton = document.getElementById('scanBarcode');
+        const stopScanButton = document.getElementById('stopScan');
+        const step1Reader = document.getElementById('step1-reader');
+        const readerDiv = document.getElementById('reader');
+
+        let html5QrCode;
+
+        nextButton.addEventListener('click', () => {
+            if (pnrInput.value && flightNumberInput.value) {
+                step1.classList.remove('active-step');
+                step2.classList.add('active-step');
+                boardingPassHidden.value = `${pnrInput.value}, ${flightNumberInput.value}`;
+            } else {
+                alert("Please enter both PNR and Flight Number.");
+            }
+        });
+
+        submitButton.addEventListener('click', () => {
+            const quantity = document.getElementById('quantity').textContent;
+            baggageCountHidden.value = quantity;
+        });
+
+        scanBarcodeButton.addEventListener('click', () => {
+            // Switch to QR code reader
+            step1.classList.remove('active-step');
+            step1Reader.classList.add('active-step');
+
+            // Initialize QR Code scanner
+            html5QrCode = new Html5Qrcode("reader");
+            html5QrCode.start(
+                { facingMode: "environment" },
+                {
+                    fps: 10,
+                    qrbox: 250
+                },
+                (decodedText, decodedResult) => {
+                    // Split the decodedText by spaces
+                    const parts = decodedText.split(/\s+/);
+
+                    // Extract the name, PNR, and flight number
+                    const name = `${parts[0].split('/')[1]} ${parts[0].split('/')[0]}`; // Getting the full name
+                    const pnr = parts[1].split(",")[0]; // Second part is the PNR
+                    const flight = parts[3]; // Fourth part is the flight number
+
+                    // Set input values
+                    pnrInput.value = pnr;
+                    flightNumberInput.value = flight;
+
+                    // Log the full name for debugging
+                    console.log(name); 
+
+                    // Stop scanning after successful scan
+                    html5QrCode.stop();
+                    step1Reader.classList.remove('active-step');
+                    step2.classList.add('active-step');
+                    boardingPassHidden.value = `${pnrInput.value}, ${flightNumberInput.value}`;
+                },
+                (errorMessage) => {
+                    // console.log(errorMessage); // Optional: log scanning errors
+                }
+            ).catch(err => {
+                console.error(err);
+            });
+        });
+
+        stopScanButton.addEventListener('click', () => {
+            if (html5QrCode) {
+                html5QrCode.stop();
+            }
+            step1Reader.classList.remove('active-step');
+            step1.classList.add('active-step');
+        });
+
+        // Quantity control logic
+        const quantityElement = document.getElementById('quantity');
+        const increaseButton = document.getElementById('increase');
+        const decreaseButton = document.getElementById('decrease');
+        let quantity = 0;
+
+        increaseButton.addEventListener('click', () => {
+            if (quantity < 5) { // Adjust max limit as needed
+                quantity++;
+                quantityElement.textContent = quantity;
+            }
+        });
+
+        decreaseButton.addEventListener('click', () => {
+            if (quantity > 0) {
+                quantity--;
+                quantityElement.textContent = quantity;
+            }
+        });
+    </script>
+</body>
+</html>

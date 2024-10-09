@@ -1,0 +1,243 @@
+body {
+    background-color: #f3f2ef; /* Light background similar to Etihad */
+    font-family: 'Arial', sans-serif;
+    color: #4e4e4e; /* Dark gray for better readability */
+/*    display: flex;*/
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+    margin: 0;
+}
+
+.container {
+    background: white;
+    padding: 30px;
+    border-radius: 15px;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+    max-width: 800px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    margin-top: 50px;
+}
+
+h1 {
+    text-align: center;
+    margin-bottom: 30px;
+    color: #c6a72b; /* Etihad gold */
+    font-weight: bold;
+}
+
+h2 {
+    text-align: center;
+    margin-top: 20px;
+    color: #0076a8; /* Etihad blue */
+}
+
+.form-group,
+.form-control {
+    margin-bottom: 20px;
+    width: 100%;
+}
+
+.btn {
+    width: 100%;
+    font-weight: bold;
+    padding: 15px;
+    border-radius: 10px;
+    transition: background-color 0.3s, transform 0.2s;
+    border: none;
+    cursor: pointer;
+}
+
+.btn-generate {
+    background: linear-gradient(135deg, #0076a8, #005b7f); /* Etihad blue gradient */
+    color: #fff;
+    transition: background 1s ease;
+}
+
+.btn-generate:hover {
+    background: linear-gradient(135deg, #005b7f, #0076a8);
+    color: #fff;
+}
+
+.btn-status {
+    background: linear-gradient(135deg, #0076a8, #005b7f); /* Etihad blue gradient */
+    color: #fff;
+    transition: background 1s ease;
+}
+
+.btn-status:hover {
+    background: linear-gradient(135deg, #005b7f, #0076a8);
+    color: #fff;
+}
+
+.btn-update {
+    background: linear-gradient(135deg, #c6a72b, #a1822e); /* Etihad gold gradient */
+    color: #fff;
+    transition: background 1s ease;
+}
+
+.btn-update:hover {
+    background: linear-gradient(135deg, #a1822e, #c6a72b);
+    color: #fff;
+}
+
+.btn-check-status {
+    background: linear-gradient(135deg, #0076a8, #005b7f); /* Etihad blue gradient */
+    color: #fff;
+    transition: background 1s ease;
+}
+
+.btn-check-status:hover {
+    background: linear-gradient(135deg, #005b7f, #0076a8);
+    color: #fff;
+}
+
+.luggage-img {
+    max-width: 300px;
+    margin-bottom: 20px;
+}
+
+.quantity-control {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+}
+
+.quantity-number {
+    font-size: 3rem;
+    font-weight: bold;
+    margin: 0 10px;
+}
+
+.step {
+    display: none;
+}
+
+.active-step {
+    display: block;
+}
+
+#reader {
+    width: 100%;
+    padding: 15px;
+    margin-top: 20px;
+    border: 2px solid #0076a8; /* Etihad blue */
+    border-radius: 10px;
+}
+
+video {
+    height: 100% !important;
+    border-radius: 25px !important;
+}
+
+.table-wrapper {
+    margin: 20px auto;
+    max-width: 1000px;
+    background-color: #fff;
+    padding: 20px;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+    border-radius: 10px;
+}
+
+table {
+    width: 100%;
+    margin: 20px 0;
+}
+
+th, td {
+    padding: 15px;
+    text-align: center;
+}
+
+th {
+    background: linear-gradient(135deg, #0076a8, #005b7f); /* Etihad blue gradient */
+    color: #fff;
+}
+
+td {
+    background-color: #f1f1f1;
+}
+
+.action-buttons a,
+.action-buttons form {
+    display: inline-block;
+}
+
+.btn-edit {
+    background: linear-gradient(135deg, #c6a72b, #a1822e); /* Etihad gold gradient */
+    color: white;
+}
+
+.btn-delete {
+    background: linear-gradient(135deg, #dc3545, #c82333); /* Existing red for delete */
+    color: white;
+}
+
+.btn-edit:hover,
+.btn-delete:hover {
+    opacity: 0.8;
+    transform: scale(1.05);
+}
+
+.back-home {
+    margin-top: 20px;
+    text-align: center;
+}
+
+.back-home a {
+    color: #0076a8; /* Etihad blue */
+    font-weight: bold;
+    text-decoration: none;
+}
+
+.back-home a:hover {
+    text-decoration: underline;
+}
+
+.back-admin {
+    margin-top: 20px;
+    text-align: center;
+}
+
+.back-admin a {
+    color: #0076a8; /* Etihad blue */
+    font-weight: bold;
+    text-decoration: none;
+}
+
+.back-admin a:hover {
+    text-decoration: underline;
+}
+
+.status-info {
+    margin-top: 20px;
+    padding: 20px;
+    background-color: #e9f7fe; /* Light blue background */
+    border: 1px solid #bde5f1; /* Light blue border */
+    border-radius: 10px;
+}
+
+.status-info p {
+    font-size: 18px;
+    margin: 10px 0;
+}
+
+.btn-success {
+    background: linear-gradient(135deg, #c6a72b, #a1822e); /* Etihad gold gradient */
+    color: #fff; /* White text for contrast */
+    padding: 15px; /* Consistent padding */
+    border: none; /* No border for a clean look */
+    border-radius: 10px; /* Rounded corners */
+    width: 100%; /* Full-width button */
+    font-weight: bold; /* Bold text */
+    transition: background-color 0.3s, transform 0.2s; /* Smooth transition for hover effects */
+    cursor: pointer; /* Pointer cursor on hover */
+}
+
+.btn-success:hover {
+    background: linear-gradient(135deg, #a1822e, #c6a72b); /* Inverted gradient for hover effect */
+    transform: scale(1.05); /* Slight scaling on hover for emphasis */
+}
