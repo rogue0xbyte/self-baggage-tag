@@ -1,0 +1,149 @@
+# BaggagePass
+
+The **BaggagePass** application is a web-based tool designed to streamline the process of generating and managing baggage passes for air travelers. By automating this system, users can easily create a digital baggage tag based on their boarding pass and keep track of the baggage status throughout their journey. The application is built using the **Flask** framework and uses **MongoDB** as its data storage system. The entire system is lightweight and can be deployed using **Docker** for easy setup in production environments.
+
+The application is hosted at: [https://self-baggage-tag.onrender.com/](https://self-baggage-tag.onrender.com/)
+
+---
+
+## Features
+
+1. **Baggage Tag Generation**: Users can generate a baggage pass by providing their boarding pass number and the number of pieces of baggage they are checking in.
+2. **Baggage Status Check**: Users can enter their boarding pass number to retrieve the current status of their baggage.
+3. **MongoDB Integration**: All baggage details, including the boarding pass number, baggage count, and status, are stored and retrieved from a **MongoDB** database.
+4. **Containerization with Docker**: The application includes a Docker setup for easy deployment, ensuring that the environment is consistent across different systems.
+
+---
+
+## Prerequisites
+
+To run this application locally, you need the following software installed:
+
+- **Python 3.x**: The application is built using Python, and Flask will run on this version.
+- **Flask**: The web framework used to create the application.
+- **MongoDB**: A NoSQL database where the baggage data is stored.
+- **Docker**: (Optional but recommended) For containerizing the application and making deployment easier.
+
+---
+
+## Installation and Setup Instructions
+
+### 1. Clone the Repository
+Begin by cloning the repository to your local machine using Git:
+```bash
+git clone https://github.com/rogue0xbyte/self-baggage-tag.git
+cd self-baggage-tag
+```
+
+### 2. Install Python Dependencies
+Install the necessary dependencies using pip:
+```bash
+pip install -r requirements.txt
+```
+
+### 3. Set Up Environment Variables
+You need to create a `.env` file in the root of the project to store your environment variables. This file should contain the following variables:
+
+```
+MONGO_URI=<Your MongoDB URI>
+SECRET_KEY=<Your Flask Secret Key>
+```
+
+- **MONGO_URI**: The connection string for your MongoDB instance (local or cloud).
+- **SECRET_KEY**: A secret key used for Flask session management.
+
+### 4. Running the Application
+Once the dependencies are installed and environment variables are set, you can run the Flask application by executing:
+```bash
+python index.py
+```
+The application will run on `http://127.0.0.1:5000` by default. You can visit this URL in your browser to use the application.
+
+### 5. Using Docker (Optional)
+To containerize the application and run it using Docker, follow these steps:
+
+1. Build the Docker image:
+   ```bash
+   docker build -t self-baggage-tag .
+   ```
+
+2. Run the Docker container:
+   ```bash
+   docker run -p 5000:5000 self-baggage-tag
+   ```
+
+This will start the application in a Docker container, accessible at `http://127.0.0.1:5000`.
+
+---
+
+## Application Usage
+
+### 1. **Generating a Baggage Tag**
+- Navigate to `/generate-pass` to generate a baggage pass.
+- Enter your **boarding pass number** and the **number of baggage pieces**.
+- Upon submission, a baggage pass will be generated, and you will see a confirmation message. This information is stored in the MongoDB database.
+
+### 2. **Checking Baggage Status**
+- Navigate to `/baggage-status` to check the status of your baggage.
+- Enter your **boarding pass number**, and if a baggage pass exists for that boarding pass, the status will be displayed.
+- If no baggage pass is found, an error message will be shown.
+
+---
+
+## Application Schema
+
+The **Self-Baggage-Tag** application interacts with a MongoDB collection named `baggagepass`. Below is the schema that defines the structure of the documents stored in this collection.
+
+### **baggagepass Collection Schema**
+
+| Field Name      | Data Type   | Description                                               |
+|-----------------|-------------|-----------------------------------------------------------|
+| `_id`           | ObjectId    | Auto-generated unique identifier for each document.        |
+| `boarding_pass` | String      | The boarding pass number entered by the user (unique).     |
+| `baggage_count` | Integer     | The number of baggage pieces checked in by the user.       |
+| `baggage_status`| String      | The status of the baggage (e.g., "Checked In", "Loaded").  |
+
+#### Example Document:
+```json
+{
+  "_id": ObjectId("60d9f43f9c1b8b324ef1f678"),
+  "boarding_pass": "BP12345",
+  "baggage_count": 2,
+  "baggage_status": "Checked In"
+}
+```
+
+### Field Details:
+
+1. **`_id`**: A unique identifier for each baggage pass entry, automatically generated by MongoDB.
+   
+2. **`boarding_pass`**: The boarding pass number entered by the user when generating the baggage pass. This serves as the unique key to find or update a user's baggage details.
+
+3. **`baggage_count`**: The number of baggage pieces that the user has checked in. This value is provided during baggage pass generation.
+
+4. **`baggage_status`**: A string representing the current status of the baggage. It is initialized to "Checked In" when the baggage pass is created but can be updated to other statuses like "In Transit" or "Delivered" as needed.
+
+---
+
+## File Structure
+
+Here’s a breakdown of the key files in the repository and their purposes:
+
+```
+self-baggage-tag/
+│
+├── index.py                 # Main application file containing routes and logic
+├── requirements.txt         # Python dependencies required for the project
+├── Dockerfile               # Docker configuration file for containerizing the app
+├── templates/               # Directory containing HTML templates for the app's UI
+│   ├── index.html           # Home page template
+│   ├── generate_pass.html   # Template for generating baggage passes
+│   └── baggage_status.html  # Template for checking baggage status
+├── static/                  # Static files like CSS or JS can be placed here
+│
+└── .env                     # Environment variables for MongoDB URI and secret key (not included in repo)
+```
+
+---
+
+**Hosted Application**: [https://self-baggage-tag.onrender.com/](https://self-baggage-tag.onrender.com/)
